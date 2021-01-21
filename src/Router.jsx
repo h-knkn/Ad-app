@@ -2,7 +2,7 @@ import React from 'react';
 import {Route, Switch} from "react-router";
 import Auth from "./Auth";
 import {
-   SignIn, SignUp, Home, Reset
+   SignIn, SignUp, Home, Reset, ProductAdd
 } from "./templates";
 
 
@@ -16,6 +16,7 @@ const Router = () => {
 
             <Auth>
                 <Route exact path={"(/)?"} component={Home} />
+                <Route exact path="/product/add" component={ProductAdd} />
             
             </Auth>
         </Switch>

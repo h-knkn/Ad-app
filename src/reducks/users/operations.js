@@ -29,10 +29,9 @@ export const listenAuthState = () => {
                         uid: uid,
                         username: data.username
                     }))
-                    dispatch(push('/'))
                 }) 
             } else {
-                dispatch(push('/signup'))
+                dispatch(push('/signin'))
             }
         })
     }
