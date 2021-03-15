@@ -147,6 +147,20 @@
     display: none;
 }
 
+/* ProductCard */
+.youtube {
+    color: #DC143C;
+}
+.blog {
+    color: #00FFFF;
+}
+.instagram {
+    color: #FF88FF;
+}
+.twitter {
+    color: #3366FF;
+}
+
 @media screen and (min-width: 576px) {
     /*********** Module Spacer ***********/
     .module-spacer--extra-extra-small {

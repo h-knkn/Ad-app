@@ -1,13 +1,27 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useCallback, useEffect} from 'react';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import styled from 'styled-components';
+
+import {db} from '../firebase/index'
 import {PrimaryButton, SelectBox,TextInput} from "../components/UIkit";
 import {useDispatch} from "react-redux";
 import {saveProduct} from "../reducks/products/operations";
-import ImageArea from "../components/Products/ImageArea"
+import {ImageArea} from "../components/Products";
 
 
-const ProductAdd = () => {
+
+const ProductEdit = () => {
 
     const dispatch = useDispatch();
+    let id = window.location.pathname.split('product/edit')[1];
+
+    if(id !== "") {
+        id = id.split('/')[1]
+        console.log(id);
+    }
+
+    const [startDate, setStartDate] = useState(new Date());
 
     const [title, setTitle] = useState(""),
     [description, setDescription] = useState(""),
@@ -16,7 +30,11 @@ const ProductAdd = () => {
     [images, setImages] = useState([]),
     [mission, setMission] = useState(""),
     [memo, setMemo] = useState(""),
-    [tags, setTags] = useState("");
+    [tags, setTags] = useState(""),
+    [recruitmentNumbers, setRecruitmentNumbers] = useState(0),
+    [campaignAddTime, setCampaignAddTime] = useState(""),
+    [announceDay, setAnnounceDay] = useState(""),
+    [contensAddTime, setContensAddTime] = useState("");
 
 
     const inputTitle = useCallback((event) => {
@@ -48,6 +66,24 @@ const ProductAdd = () => {
     ];
 
 
+    useEffect(() => {
+       if(id !== ""){
+           db.collection('products').doc(id).get()
+           .then(snapshot => {
+               const data = snapshot.data();
+               console.log(data);
+               setTitle(data.title);
+               setDescription(data.description);
+               setCategory(data.category);
+               setImages(data.images);
+               setMission(data.mission);
+               setMemo(data.memo);
+               setTags(data.tags);
+           })
+       }
+    }, [id])
+
+
 
 
 
@@ -67,6 +103,15 @@ const ProductAdd = () => {
                 <SelectBox
                    label={"カテゴリー"} required={true}　options={categories} select={setCategory} value={category} 
                 />
+                <SMargin>
+                    <SText>キャンペーン結果発表</SText>
+                {/* <DatePicker
+                    dateFormat="yyyy/MM/dd"
+                    selected={startDate}
+                    value={startDate}
+                    onChange={date => setStartDate(date)}
+                /> */}
+                </SMargin>
                 <TextInput
                     fullWidth={true} label={"ハッシュタグ"} multiline={true} required={false}
                     onChange={inputTags} rows={1} value={tags} type={"text"}
@@ -83,7 +128,7 @@ const ProductAdd = () => {
                 <div className="center">
                     <PrimaryButton
                     label={"保存する"}
-                    onClick={() => dispatch(saveProduct(title, description, category, tags, mission, memo, images))}
+                    onClick={() => dispatch(saveProduct(id, title, description, category, tags, mission, memo, images))}
                     />
                 </div>
             </div>
@@ -91,4 +136,13 @@ const ProductAdd = () => {
     )
 }
 
-export default ProductAdd;
+export default ProductEdit;
+
+
+const SMargin = styled.div`
+  margin: 30px 0;
+`;
+
+const SText = styled.p`
+  margin-bottom: 7px;
+`;
